@@ -3,15 +3,24 @@
 import {
   Outlet,
   Link,
-  useLoaderData
+  useLoaderData,
+  Form
  } from "react-router-dom";
-import { getContacts } from "../contacts";
+import { createContact, getContacts } from "../contacts";
 
 // loadしたときに実行したい関数を定義
 export async function loader(){
   const contacts = await getContacts();
   return { contacts };
 }
+
+// Formをした際に呼ばれるaction で実行したい関数を定義 
+export async function action(){
+  const { contact } = await createContact();
+  return { contact };
+}
+// useActionData で return を使うことができる
+// https://reactrouter.com/en/main/route/action#returning-responses
 
 export default function Root(){
   // load時に実行した結果をuseLoaderDateを使って取得
@@ -39,9 +48,10 @@ export default function Root(){
               aria-live="polite"
             ></div>
           </form>
-          <form method="post">
+          {/* html の form から　Form に帰ることでクライアントサイドルーティングになり、サーバーにリクエストを飛ばさずURLを変更することができる */}
+          <Form method="post">
             <button type="submit">New</button>
-          </form>
+          </Form>
         </div>
         <nav>
           {contacts.length ? (

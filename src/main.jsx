@@ -7,7 +7,11 @@ import {
 import './index.css'
 
 // load時に実行する関をimport
-import Root, { loader as rootLoader } from './routes/root';
+// <Form> prevents the browser from sending the request to the server and sends it to your route action instead
+import Root,{
+  loader as rootLoader,
+  action as rootAction,
+} from './routes/root';
 import ErrorPage from './error-page';
 import Contact from './routes/contact';
 
@@ -17,6 +21,10 @@ const router = createBrowserRouter([
     element:<Root />,
     errorElement: <ErrorPage />,
     loader: rootLoader,
+    // In web semantics, a POST usually means some data is changing. 
+    // By convention, React Router uses this as a hint to automatically revalidate the data on the page after the action finishes. 
+    // That means all of your useLoaderData hooks update and the UI stays in sync with your data automatically! Pretty cool.
+    action: rootAction,
     children: [
       {
         path: "contacts/:contactId",
