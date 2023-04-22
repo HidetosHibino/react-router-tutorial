@@ -2,7 +2,7 @@
 
 import { Outlet } from "react-router-dom";
 
-const Root = () => {
+export default function Root(){
   return (
     <>
       <div id="sidebar">
@@ -47,6 +47,5 @@ const Root = () => {
     </>
   );
 }
- 
-export default Root;
+
 // We need to tell the root route where we want it to render its child routes. We do that with <Outlet>.
