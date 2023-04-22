@@ -1,14 +1,18 @@
-import { Form } from "react-router-dom";
+import { Form, useLoaderData } from "react-router-dom";
+import { getContact } from "../contacts";
+// contactId URL セグメントに注目してください。コロン（:）には特別な意味があり、「ダイナミックセグメント」になります。
+// ダイナミックセグメントは、コンタクトIDのように、URLのその位置にあるダイナミックな（変化する）値にマッチします。
+// このようなURLの値を「URL Params」、または単に「params」と呼びます。
+
+// これらのパラメータは、動的なセグメントに一致するキーでloaderに渡されます。
+// たとえば、このセグメントは :contactId という名前なので、値は params.contactId として渡されます。
+export async function loader({params}){
+  const contact = await getContact(params.contactId);
+  return { contact };
+}
 
 export default function Contact() {
-  const contact = {
-    first: "Your",
-    last: "Name",
-    avatar: "https://placekitten.com/g/200/200",
-    twitter: "your_handle",
-    notes: "Some notes",
-    favorite: true,
-  };
+  const { contact } = useLoaderData();
 
   return (
     <div id="contact">
