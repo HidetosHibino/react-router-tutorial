@@ -4,7 +4,7 @@ import {
   Outlet,
   Link,
   useLoaderData,
-  Form
+  Form,
  } from "react-router-dom";
 import { createContact, getContacts } from "../contacts";
 
@@ -16,7 +16,8 @@ export async function loader(){
 
 // Formをした際に呼ばれるaction で実行したい関数を定義 
 export async function action(){
-  const { contact } = await createContact();
+  console.log("SSSSS");
+  const contact  = await createContact();
   return { contact };
 }
 // useActionData で return を使うことができる
@@ -24,7 +25,7 @@ export async function action(){
 
 export default function Root(){
   // load時に実行した結果をuseLoaderDateを使って取得
-  const contacts = useLoaderData();
+  const { contacts } = useLoaderData();
   return (
     <>
       <div id="sidebar">
