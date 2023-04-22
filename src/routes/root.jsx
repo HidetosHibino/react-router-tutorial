@@ -1,5 +1,7 @@
 // global layout for this app.
 
+import { Outlet } from "react-router-dom";
+
 const Root = () => {
   return (
     <>
@@ -39,9 +41,12 @@ const Root = () => {
           </ul>
         </nav>
       </div>
-      <div id="detail"></div>
+      <div id="detail">
+        <Outlet />
+      </div>
     </>
   );
 }
  
 export default Root;
+// We need to tell the root route where we want it to render its child routes. We do that with <Outlet>.
