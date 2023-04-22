@@ -1,8 +1,21 @@
 // global layout for this app.
 
-import { Outlet,Link } from "react-router-dom";
+import {
+  Outlet,
+  Link,
+  useLoaderData
+ } from "react-router-dom";
+import { getContacts } from "../contacts";
+
+// loadしたときに実行したい関数を定義
+export async function loader(){
+  const contacts = await getContacts();
+  return { contacts };
+}
 
 export default function Root(){
+  // load時に実行した結果をuseLoaderDateを使って取得
+  const contacts = useLoaderData();
   return (
     <>
       <div id="sidebar">
@@ -31,14 +44,28 @@ export default function Root(){
           </form>
         </div>
         <nav>
-          <ul>
-            <li>
-              <Link to={`contacts/1`}>Your Name</Link>
-            </li>
-            <li>
-              <Link to={`contacts/2`}>Your Friend</Link>
-            </li>
-          </ul>
+          {contacts.length ? (
+            <ul>
+              {contacts.map((contact) => (
+                <li key={contact.id}>
+                  <Link to={`contacts/${contact.id}`}>
+                    {contact.first || contact.last ? (
+                      <>
+                        {contact.first} {contact.last}
+                      </>
+                    ) : (
+                      <i>No Name</i>
+                    )}{" "}
+                    {contact.favorite && <span>★</span>}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>
+              <i>No contents</i>
+            </p>
+          )}
         </nav>
       </div>
       <div id="detail">
@@ -49,3 +76,8 @@ export default function Root(){
 }
 
 // We need to tell the root route where we want it to render its child routes. We do that with <Outlet>.
+
+// There are two APIs we'll be using to load data, loader and useLoaderData. 
+// First we'll create and export a loader function in the root module, 
+// then we'll hook it up to the route. 
+// Finally, we'll access and render the data.
