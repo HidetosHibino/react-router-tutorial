@@ -7,8 +7,10 @@ import {
   Form,
   redirect,
   useNavigation,
+  useFetcher,
  } from "react-router-dom";
 import { createContact, getContacts } from "../contacts";
+import { useEffect } from "react";
 
 // loadしたときに実行したい関数を定義
 // search Form は　get なので、URLを変化するだけ。　なので、loaderでurlパラメータから取得する。
@@ -16,7 +18,7 @@ export async function loader({ request }){
   const url = new URL(request.url);
   const q = url.searchParams.get("q");
   const contacts = await getContacts(q);
-  return { contacts };
+  return { contacts, q };
 }
 
 // Formをした際に呼ばれるaction で実行したい関数を定義 
@@ -29,8 +31,13 @@ export async function action(){
 
 export default function Root(){
   // load時に実行した結果をuseLoaderDateを使って取得
-  const { contacts } = useLoaderData();
+  const { contacts, q } = useLoaderData();
   const navigation = useNavigation();
+
+  useEffect(() => {
+    document.getElementById("q").value = q;
+  }, [q])
+
   return (
     <>
       <div id="sidebar">
@@ -45,6 +52,7 @@ export default function Root(){
               placeholder="Search"
               type="search"
               name="q"
+              defaultValue={q}
             />
             <div
               id="search-spinner"
@@ -159,3 +167,11 @@ if(false){
   />
 </Form>
 }
+
+// 1.検索後にクリックバックすると、リストがフィルタリングされなくなったにもかかわらず、フォームフィールドには入力された値が残っています。
+// 2.検索後にページを更新した場合、リストがフィルタリングされているにもかかわらず、フォームフィールドには入力された値が残っていない
+
+// 1: 戻る　を押した場合はinput が再レンダー対象になっていないから？ => ブラウザバックは読み込みされないみたい　 => キャッシュにあるデータを呼び出す
+//    useEffect でdom操作で入れ込む
+// 2: 今はloader 時にデータをフィルタリングしているが、 フォームの値はurl から引っ張ってきていない。
+//    defaultValue={q} にする
