@@ -12,6 +12,12 @@ import { getContact, updateContact } from "../contacts";
 // たとえば、このセグメントは :contactId という名前なので、値は params.contactId として渡されます。
 export async function loader({params}){
   const contact = await getContact(params.contactId);
+  if (!contact) {
+    throw new Response("", {
+      status: 404,
+      statusText: "Not Found",
+    });
+  }
   return { contact };
 }
 
