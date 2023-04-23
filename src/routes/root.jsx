@@ -11,8 +11,11 @@ import {
 import { createContact, getContacts } from "../contacts";
 
 // loadしたときに実行したい関数を定義
-export async function loader(){
-  const contacts = await getContacts();
+// search Form は　get なので、URLを変化するだけ。　なので、loaderでurlパラメータから取得する。
+export async function loader({ request }){
+  const url = new URL(request.url);
+  const q = url.searchParams.get("q");
+  const contacts = await getContacts(q);
   return { contacts };
 }
 
@@ -35,7 +38,7 @@ export default function Root(){
         <div>
           {/* これまでのインタラクティブUIは、URLを変更するリンクか、データをアクションにポストするフォームのどちらかでした。
           検索フィールドは、その両方を兼ね備えているのが面白いところです。フォームですが、URLを変更するだけで、データは変更しません。 */}
-          <form id="search-form" role="search">
+          <Form id="search-form" role="search">
             <input
               id="q"
               aria-label="Search contacts"
@@ -52,7 +55,7 @@ export default function Root(){
               className="sr-only"
               aria-live="polite"
             ></div>
-          </form>
+          </Form>
           {/* html の form から　Form に帰ることでクライアントサイドルーティングになり、サーバーにリクエストを飛ばさずURLを変更することができる */}
           <Form method="post">
             <button type="submit">New</button>
@@ -140,3 +143,19 @@ if (false) {
 // 以前見たように、ブラウザはinput要素のname属性でフォームをシリアライズすることができます。この入力の名前はqで、そのためURLは?q=となります。もしsearchと名付けたら、URLは?search=となります。
 // このフォームは、これまで使ってきた他のフォームとは異なり、<form method="post">がないことに注意してください。デフォルトのメソッドは「get」です。
 // つまり、ブラウザが次のドキュメントのリクエストを作成するときに、フォームデータをリクエストのPOSTボディに入れるのではなく、GETリクエストのURLSearchParamsに入れるということです。
+
+// GET Submissions with Client Side Routing
+// これはPOSTではなくGETなので、React Routerはアクションを呼び出さない。GETフォームの送信は、リンクをクリックするのと同じで、URLだけが変更されます。そのため、フィルタリングのために追加したコードは、このルートのアクションではなく、ローダーの中にあります。
+// これは、通常のページナビゲーションであることも意味しています。戻るボタンをクリックすれば、元の場所に戻ることができます。
+
+if(false){
+  <Form id="search-form" role="search">
+  <input
+    id="q"
+    aria-label="Search contacts"
+    placeholder="Search"
+    type="search"
+    name="q"
+  />
+</Form>
+}
