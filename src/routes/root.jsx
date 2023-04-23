@@ -7,7 +7,7 @@ import {
   Form,
   redirect,
   useNavigation,
-  useFetcher,
+  useSubmit,
  } from "react-router-dom";
 import { createContact, getContacts } from "../contacts";
 import { useEffect } from "react";
@@ -33,6 +33,7 @@ export default function Root(){
   // load時に実行した結果をuseLoaderDateを使って取得
   const { contacts, q } = useLoaderData();
   const navigation = useNavigation();
+  const submit = useSubmit();
 
   useEffect(() => {
     document.getElementById("q").value = q;
@@ -53,6 +54,10 @@ export default function Root(){
               type="search"
               name="q"
               defaultValue={q}
+              // 値が変わるごとにsubmit でクライアントサイドルーティングのgetリクエストを出す
+              onChange={(event)=>{
+                submit(event.currentTarget.form)
+              }}
             />
             <div
               id="search-spinner"
