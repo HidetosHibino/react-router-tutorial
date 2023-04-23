@@ -6,6 +6,7 @@ import {
   useLoaderData,
   Form,
   redirect,
+  useNavigation,
  } from "react-router-dom";
 import { createContact, getContacts } from "../contacts";
 
@@ -26,6 +27,7 @@ export async function action(){
 export default function Root(){
   // load時に実行した結果をuseLoaderDateを使って取得
   const { contacts } = useLoaderData();
+  const navigation = useNavigation();
   return (
     <>
       <div id="sidebar">
@@ -95,7 +97,14 @@ export default function Root(){
           )}
         </nav>
       </div>
-      <div id="detail">
+      <div 
+        id="detail"
+        className={
+          // useNavigation returns the current navigation state: it can be one of "idle" | "submitting" | "loading".
+          // ローディング画面
+          navigation.state === "loading" ? "loading" : ""
+        }
+      >
         <Outlet />
       </div>
     </>
