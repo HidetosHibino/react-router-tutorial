@@ -46,6 +46,12 @@ const router = createBrowserRouter([
       {
         path: "contacts/:contactId/destroy",
         action: destroyAction,
+        // Because the destroy route has its own errorElement and is a child of the root route, 
+        // the error will render there instead of the root. As you probably noticed, 
+        // these errors bubble up to the nearest errorElement. 
+        // Add as many or as few as you like, as long as you've got one at the root.
+        // 子供にerrorElementをしていないと親に吸われる
+        errorElement: <div>Oops! There was an error.</div>,
       },
     ]
   },
