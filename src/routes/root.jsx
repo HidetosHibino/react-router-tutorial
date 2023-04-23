@@ -33,6 +33,8 @@ export default function Root(){
       <div id="sidebar">
         <h1>React Router Contacts</h1>
         <div>
+          {/* これまでのインタラクティブUIは、URLを変更するリンクか、データをアクションにポストするフォームのどちらかでした。
+          検索フィールドは、その両方を兼ね備えているのが面白いところです。フォームですが、URLを変更するだけで、データは変更しません。 */}
           <form id="search-form" role="search">
             <input
               id="q"
@@ -117,3 +119,24 @@ export default function Root(){
 // First we'll create and export a loader function in the root module, 
 // then we'll hook it up to the route. 
 // Finally, we'll access and render the data.
+
+// *URL Search Params and GET Submissions
+// これまでのインタラクティブUIは、URLを変更するリンクか、データをアクションにポストするフォームのどちらかでした。
+// 検索フィールドは、その両方を兼ね備えているのが面白いところです。フォームですが、URLを変更するだけで、データは変更しません。
+// 今はReact Routerの<Form>ではなく、普通のHTMLの<Form>になっています。デフォルトでブラウザがこれをどう扱うか見てみましょう：
+if (false) {
+  <form id="search-form" role="search">
+    <input
+      id="q"  // ここがUrlに反映される
+      aria-label="Search contacts"
+      placeholder="Search"
+      type="search"
+      name="q"
+    />
+    <div id="search-spinner" aria-hidden hidden={true} />
+    <div className="sr-only" aria-live="polite"></div>
+  </form>
+}
+// 以前見たように、ブラウザはinput要素のname属性でフォームをシリアライズすることができます。この入力の名前はqで、そのためURLは?q=となります。もしsearchと名付けたら、URLは?search=となります。
+// このフォームは、これまで使ってきた他のフォームとは異なり、<form method="post">がないことに注意してください。デフォルトのメソッドは「get」です。
+// つまり、ブラウザが次のドキュメントのリクエストを作成するときに、フォームデータをリクエストのPOSTボディに入れるのではなく、GETリクエストのURLSearchParamsに入れるということです。
