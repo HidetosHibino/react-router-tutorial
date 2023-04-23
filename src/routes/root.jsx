@@ -5,6 +5,7 @@ import {
   Link,
   useLoaderData,
   Form,
+  redirect,
  } from "react-router-dom";
 import { createContact, getContacts } from "../contacts";
 
@@ -17,7 +18,7 @@ export async function loader(){
 // Formをした際に呼ばれるaction で実行したい関数を定義 
 export async function action(){
   const contact  = await createContact();
-  return { contact };
+  return redirect(`/contacts/${contact.id}/edit`); // ちょっと違和感ある。redirect は関数を返している？ => Responce を返している
 }
 // useActionData で return を使うことができる
 // https://reactrouter.com/en/main/route/action#returning-responses
