@@ -65,7 +65,10 @@ export default function Root(){
               defaultValue={q}
               // 値が変わるごとにsubmit でクライアントサイドルーティングのgetリクエストを出す
               onChange={(event)=>{
-                submit(event.currentTarget.form)
+                const isFirstSearch = q == null;
+                submit(event.currentTarget.form,{
+                  replace: !isFirstSearch,
+                })
               }}
             />
             <div
