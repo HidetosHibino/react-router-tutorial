@@ -1,5 +1,9 @@
-import { Form, useLoaderData } from "react-router-dom";
-import { getContact } from "../contacts";
+import { 
+  Form,
+  useLoaderData,
+  useFetcher,
+} from "react-router-dom";
+import { getContact, updateContact } from "../contacts";
 // contactId URL セグメントに注目してください。コロン（:）には特別な意味があり、「ダイナミックセグメント」になります。
 // ダイナミックセグメントは、コンタクトIDのように、URLのその位置にあるダイナミックな（変化する）値にマッチします。
 // このようなURLの値を「URL Params」、または単に「params」と呼びます。
@@ -9,6 +13,13 @@ import { getContact } from "../contacts";
 export async function loader({params}){
   const contact = await getContact(params.contactId);
   return { contact };
+}
+
+export async function action({request, params}){
+  let formData = await request.formData();
+  return updateContact(params.contactId, {
+    favorite: formData.get("favorite") ==="true"
+  })
 }
 
 export default function Contact() {
@@ -76,10 +87,11 @@ export default function Contact() {
 }
 
 function Favorite({ contact }) {
+  const fetcher = useFetcher();
   // yes, this is a `let` for later
   let favorite = contact.favorite;
   return (
-    <Form method="post">
+    <fetcher.Form method="post">
       <button
         name="favorite"
         value={favorite ? "false" : "true"}
@@ -91,6 +103,10 @@ function Favorite({ contact }) {
       >
         {favorite ? "★" : "☆"}
       </button>
-    </Form>
+    </fetcher.Form>
   );
 }
+
+// これまでのミューテーション（データを変更すること）では、履歴スタックに新しいエントリーを作成し、ナビゲートするフォームを使用してきました。
+// このようなユーザーフローはよくあることですが、ナビゲーションを行わずにデータを変更したい場合も同じようによくあります。
+// このような場合、useFetcherフックがあります。これによって、ナビゲーションを起こさずにローダーやアクションと通信することができます。

@@ -11,9 +11,11 @@ import './index.css'
 import Root,{
   loader as rootLoader,
   action as rootAction,
+  action,
 } from './routes/root';
 import Contact,{
-  loader as contactLoader
+  loader as contactLoader,
+  action as contactAction,
 } from './routes/contact'
 import ErrorPage from './error-page';
 import EditContact, {
@@ -39,7 +41,8 @@ const router = createBrowserRouter([
       {
         path: "contacts/:contactId",
         element: <Contact />,
-        loader: contactLoader
+        loader: contactLoader,
+        action: contactAction
       },
       {
         path: "contacts/:contactId/edit",
