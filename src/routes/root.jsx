@@ -2,7 +2,7 @@
 
 import {
   Outlet,
-  Link,
+  NavLink,
   useLoaderData,
   Form,
   redirect,
@@ -59,7 +59,23 @@ export default function Root(){
             <ul>
               {contacts.map((contact) => (
                 <li key={contact.id}>
-                  <Link to={`contacts/${contact.id}`}>
+                  <NavLink 
+                    to={`contacts/${contact.id}`}
+                    className={({ isActive, isPending}) => 
+                      // Note that we are passing a function to className. 
+                      // When the user is at the URL in the NavLink, then isActive will be true. 
+                      // When it's about to be active (the data is still loading) then isPending will be true. 
+                      // This allows us to easily indicate where the user is, as well as provide immediate feedback on links that have been clicked but we're still waiting for data to load.
+                      // 下のURLでもisActiveになる(contacts/:contactId/edit 等)
+                      isActive
+                        ? "active"
+                        : ( 
+                            isPending
+                              ? "pending"
+                              : ""
+                          )
+                    }
+                  >
                     {contact.first || contact.last ? (
                       <>
                         {contact.first} {contact.last}
@@ -68,7 +84,7 @@ export default function Root(){
                       <i>No Name</i>
                     )}{" "}
                     {contact.favorite && <span>★</span>}
-                  </Link>
+                  </NavLink>
                 </li>
               ))}
             </ul>
