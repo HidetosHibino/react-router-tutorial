@@ -16,7 +16,6 @@ export async function loader(){
 
 // Formをした際に呼ばれるaction で実行したい関数を定義 
 export async function action(){
-  console.log("SSSSS");
   const contact  = await createContact();
   return { contact };
 }

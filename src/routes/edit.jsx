@@ -1,5 +1,32 @@
 import React from 'react';
-import { Form, useLoaderData } from 'react-router-dom';
+import {
+  Form,
+  useLoaderData,
+  redirect,
+} from 'react-router-dom';
+import { updateContact  } from '../contacts';
+
+// request: This is a Fetch Request instance being sent to your route. The most common use case is to parse the FormData from the request
+// https://reactrouter.com/en/main/route/action#request
+export async function action({request, params}) {
+  const formData = await request.formData();
+  const updates = Object.fromEntries(formData);
+  await updateContact(params.contactId, updates);
+  return redirect(`/contacts/${params.contactId}`);
+}
+// 解説：　const updates = Object.fromEntries(formData);
+// Each field in the form is accessible with formData.get(name). 
+// For example, given the input field from above, 
+// you could access the first and last names like this:
+// const firstName = formData.get("first");
+// const lastName = formData.get("last");
+
+// const updates = Object.fromEntries(formData);
+// updates.first; // "Some"
+// updates.last; // "Name"
+
+// The redirect helper just makes it easier to return a response that "tells the app to change locations."
+
 
 export default function EditContact() {
   const { contact } = useLoaderData();
