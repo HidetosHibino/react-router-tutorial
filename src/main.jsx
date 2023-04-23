@@ -20,6 +20,7 @@ import EditContact, {
   action as editAction
 } from './routes/edit';
 import { action as destroyAction } from './routes/destroy';
+import Index from './routes';
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,9 @@ const router = createBrowserRouter([
     // That means all of your useLoaderData hooks update and the UI stays in sync with your data automatically! Pretty cool.
     action: rootAction,
     children: [
+      // Note the { index:true } instead of { path: "" }.
+      // That tells the router to match and render this route when the user is at the parent route's exact path, so there are no other child routes to render in the <Outlet>.
+      { index: true, element: <Index />},
       {
         path: "contacts/:contactId",
         element: <Contact />,
